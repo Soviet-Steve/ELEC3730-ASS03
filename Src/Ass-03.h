@@ -110,6 +110,10 @@ struct strButton{
   uint16_t width;
   uint16_t height;
   uint8_t pressed;
-  uint8_t name[];
+  uint8_t name[7]; // Length set to 7 to help with padding 
 };
 
+extern int fninCheckPressed(tenButtons choice);
+extern void fnvdResetTouch(void);
+
+extern uint8_t state;

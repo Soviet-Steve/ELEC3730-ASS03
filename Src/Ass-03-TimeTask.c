@@ -34,7 +34,10 @@ void StartTimeTask(void const * argument)
     }
     TextBoxSend(100, 210, 210, 20, TheTimeString);
     fnvdIncreaseTime();
-	  osDelay(1000);
+    HAL_GPIO_TogglePin(GPIOD, GPIO_PIN_13);
+	  osDelay(10);
+    HAL_GPIO_TogglePin(GPIOD, GPIO_PIN_13);
+    osDelay(990);
   }
 }
 

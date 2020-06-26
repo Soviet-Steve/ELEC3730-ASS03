@@ -10,44 +10,41 @@
 char TheTouchString[MESS_STR_LEN];
 
 struct strButton buttonUp = {
-  5, 30, 80, 20, 0, "UP"
+  5, 5, 80, 20, 0, "UP"
 },
 buttonDown = {
-  5, 55, 80, 20, 0, "DOWN"
+  5, 30, 80, 20, 0, "DOWN"
 },
 buttonView = {
-  5, 80, 80, 20, 0, "VIEW" 
+  5, 55, 80, 20, 0, "VIEW" 
 },
 buttonDelete = {
-  5, 105, 80, 20, 0, "DELETE" 
+  5, 80, 80, 20, 0, "DELETE" 
 },
 buttonLive = {
-  5, 130, 80, 20, 0, "LIVE" 
+  5, 105, 80, 20, 0, "LIVE" 
 },
 buttonReset = {
-  5, 210, 80, 20, 0, "RESET" 
+  5, 130, 80, 20, 0, "RESET" 
 };
+
 
 void StartTPTask(void const * argument)
 {
   printf("INFO: Hello from %s!\n", pcTaskGetName(osThreadGetId()));
   fnvdBulkHandler();
-  while (1)
-  {
-    if (BSP_TP_GetDisplayPoint (&display) == 0)
-    {
-      fnvdBulkHandler();
-      if(buttonReset.pressed){
-        BSP_LCD_Clear(0xFFFFFFFF);
-        fnvdResetTouch();
-        fnvdBulkHandler();
-        continue;
-      }
-      sprintf(TheTouchString,"(%3d, %3d)", display.x, display.y);
-      TextBoxSend(5, 5, 160, 20, TheTouchString);
+  while (1){
+    if (BSP_TP_GetDisplayPoint (&display) == 0){
     }
+    if(state)
+      strcpy(buttonLive.name, "LIVE");
+    else
+      strcpy(buttonLive.name, " SD ");
+	  osDelay(25);
+    fnvdBulkHandler();
+    positionPoint();
     fnvdResetTouch();
-	  osDelay(100);
+    osDelay(25);
   }
 }
 
@@ -67,10 +64,39 @@ void fnvdBulkHandler(void){
   fnvdButtonHandler(&buttonView);
   fnvdButtonHandler(&buttonDelete);
   fnvdButtonHandler(&buttonLive);
-  fnvdButtonHandler(&buttonReset);
+  // fnvdButtonHandler(&buttonReset);
 }
 
 void fnvdResetTouch(void){
   display.x = -1;
   display.y = -1;
+}
+
+
+void positionPoint(void){
+  static volatile uint16_t xprev = 0;
+  static volatile uint16_t yprev = 0;
+  if(display.x != xprev || display.y != display.y){
+    TextBoxSend(xprev, yprev, 1, 1, " ");
+    TextBoxSend(display.x, display.y, 1, 1, ".");
+    xprev = display.x;
+    yprev = display.y;
+  }
+}
+
+int fninCheckPressed(tenButtons choice){
+  switch (choice){
+  case up:
+    return buttonUp.pressed;
+  case down:
+    return buttonDown.pressed;
+  case view:
+    return buttonView.pressed;
+  case delete:
+    return buttonDelete.pressed;
+  case live:
+    return buttonLive.pressed;
+  default:
+    return 0;
+  }
 }

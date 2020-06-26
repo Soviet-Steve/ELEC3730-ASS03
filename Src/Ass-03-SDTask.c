@@ -20,7 +20,12 @@ StartSDTask (void const * argument)
   uint8_t textread[BUFF_SIZE];
 
   printf ("INFO: Hello from %s!\n", pcTaskGetName (osThreadGetId ()));
-  // while (1)
+  if ((res = f_mount (&SDFatFS, (TCHAR const *) SDPath, 0)) != FR_OK)
+  {
+    printf ("ERROR: Could not mount file system '%s' (%d).\n", SDPath, res);
+    ExitError();
+  }
+  while (1)
   {
     osDelay(10000);
   }

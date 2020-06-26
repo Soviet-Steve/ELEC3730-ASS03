@@ -7,6 +7,9 @@
 
 #include "Ass-03.h"
 
+uint8_t state = 0;
+char state_message[2];
+
 void StartControlTask(void const * argument)
 {
   printf("INFO: Hello from %s!\n", pcTaskGetName(osThreadGetId()));
@@ -26,6 +29,17 @@ void StartControlTask(void const * argument)
 
   while (1)
   {
-    osDelay(1000);
+    if(fninCheckPressed(live)){
+      state ^= 1;
+      osDelay(250);
+    }
+    // sprintf(state_message, "%d", state);
+    BSP_LCD_SetTextColor(LCD_COLOR_RED);
+    if(state)
+      TextBoxSend(5, 210, 80, 20, " SD ");
+    else
+      TextBoxSend(5, 210, 80, 20, "LIVE");    
+    BSP_LCD_SetTextColor(LCD_COLOR_BLACK);
+    osDelay(10);
   }
 }

@@ -8,6 +8,7 @@
 
 // Library files
 
+
 void Init_Camera(void)
 {
   OV7670_IDTypeDef OV7670ID;
