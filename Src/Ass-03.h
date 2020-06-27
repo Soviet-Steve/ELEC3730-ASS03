@@ -117,3 +117,4 @@ extern int fninCheckPressed(tenButtons choice);
 extern void fnvdResetTouch(void);
 
 extern uint8_t state;
+extern uint8_t stateChange;

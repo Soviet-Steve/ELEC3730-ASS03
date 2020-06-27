@@ -9,6 +9,7 @@
 
 uint8_t state = 0;
 char state_message[2];
+uint8_t stateChange = 0;
 
 void StartControlTask(void const * argument)
 {
@@ -31,6 +32,7 @@ void StartControlTask(void const * argument)
   {
     if(fninCheckPressed(live)){
       state ^= 1;
+      stateChange = 1;
       osDelay(250);
     }
     // sprintf(state_message, "%d", state);

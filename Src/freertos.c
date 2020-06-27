@@ -173,7 +173,7 @@ void MX_FREERTOS_Init(void) {
   TimeTaskHandle = osThreadCreate(osThread(TimeTask), NULL);
 
   /* definition and creation of TPTask */
-  osThreadDef(TPTask, StartTPTask, osPriorityNormal, 0, 1024);
+  osThreadDef(TPTask, StartTPTask, osPriorityHigh, 0, 1024);
   TPTaskHandle = osThreadCreate(osThread(TPTask), NULL);
 
   /* USER CODE BEGIN RTOS_THREADS */
