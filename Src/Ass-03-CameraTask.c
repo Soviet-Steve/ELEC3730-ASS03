@@ -19,6 +19,8 @@ uint16_t LineXferCplt = 0;
 uint16_t LineCounter = 0;
 uint16_t FrameCounter = 0;
 
+uint8_t archPhotoBuffer[PHOTO_X_SIZE * PHOTO_Y_SIZE];
+
 void
 StartCameraTask (void const * argument)
 {
@@ -30,6 +32,13 @@ StartCameraTask (void const * argument)
   // Infinite loop
   while (1)
   {
+    if(inPhotoTaken == 1){
+      fnvdCameraToMem();
+    }
+    if(inPhotoTaken > 0){
+      osDelay(10);
+      continue;
+    }
     if(state && stateChange){
       HAL_DCMI_Stop (&hdcmi);
       BSP_LCD_Clear(0xFFFFFFFF);      
@@ -68,6 +77,7 @@ void fnvdDisplayLive(void){
   // Get control
   //
   osMutexWait (SDIODCMIMutexHandle, osWaitForever);
+  Swap_SDCard_to_Camera ();
   // printf ("INFO: %s has control of shared SDIO/DCMI pins!\n",
   //         pcTaskGetName (osThreadGetId ()));
   // Get a number of frames before giving releasing MUTEX
@@ -111,6 +121,23 @@ void fnvdDisplayLive(void){
   // Stop DCMI interface
   //HAL_DCMI_Stop (&hdcmi);
   // Give back control
+  Swap_Camera_to_SDCard ();
   osMutexRelease (SDIODCMIMutexHandle);
+  osThreadYield ();
+}
+
+void fnvdCameraToMem(void){
+  Swap_SDCard_to_Camera ();
+  osMutexWait (SDIODCMIMutexHandle, osWaitForever);
+  BSP_LCD_Clear(0xFFFFFFFF); 
+  TextBoxSend(5, 5, 240, 20, "Capturing Photo!");
+  osMutexWait (LCDMutexHandle, osWaitForever);
+  for(uint32_t i = 0; i < PHOTO_X_SIZE*PHOTO_Y_SIZE; i+=PHOTO_Y_SIZE)
+    HAL_DCMI_Start_DMA (&hdcmi, DCMI_MODE_CONTINUOUS, (uint32_t) &archPhotoBuffer[i], PHOTO_X_SIZE / 4);
+  HAL_DCMI_Stop (&hdcmi);
+  osMutexRelease (LCDMutexHandle);
+  osMutexRelease (SDIODCMIMutexHandle);
+  Swap_Camera_to_SDCard ();
+  inPhotoTaken = 2;
   osThreadYield ();
 }

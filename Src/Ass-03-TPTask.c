@@ -34,6 +34,10 @@ void StartTPTask(void const * argument)
   printf("INFO: Hello from %s!\n", pcTaskGetName(osThreadGetId()));
   fnvdBulkHandler();
   while (1){
+    if(inPhotoTaken > 0){
+      osDelay(10);
+      continue;
+    }
     if (BSP_TP_GetDisplayPoint (&display) == 0){
     }
     if(state)
@@ -63,6 +67,7 @@ void fnvdBulkHandler(void){
   fnvdButtonHandler(&buttonDown);
   fnvdButtonHandler(&buttonView);
   fnvdButtonHandler(&buttonDelete);
+  fnvdButtonHandler(&buttonLive);
   fnvdButtonHandler(&buttonLive);
   // fnvdButtonHandler(&buttonReset);
 }

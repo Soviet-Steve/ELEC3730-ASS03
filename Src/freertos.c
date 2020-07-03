@@ -58,6 +58,7 @@ osThreadId TimeTaskHandle;
 osThreadId TPTaskHandle;
 osMutexId SDIODCMIMutexHandle;
 osMutexId LCDMutexHandle;
+osMutexId PhotoTakenHandle;
 osSemaphoreId DCMILineCompleteHandle;
 
 /* Private function prototypes -----------------------------------------------*/
@@ -123,6 +124,10 @@ void MX_FREERTOS_Init(void) {
   /* definition and creation of LCDMutex */
   osMutexDef(LCDMutex);
   LCDMutexHandle = osMutexCreate(osMutex(LCDMutex));
+
+  /* definition and creation of PhotoTaken */
+  osMutexDef(PhotoTaken);
+  PhotoTakenHandle = osMutexCreate(osMutex(PhotoTaken));
 
   /* USER CODE BEGIN RTOS_MUTEX */
   /* add mutexes, ... */

@@ -26,7 +26,14 @@ void StartTimeTask(void const * argument)
   while (1)
   {
     // STEPIEN: Rough example, need to do accurate time and HH:MM:SS
-
+    if(inPhotoTaken > 0){
+     fnvdIncreaseTime();
+      HAL_GPIO_TogglePin(GPIOD, GPIO_PIN_13);
+	    osDelay(10);
+      HAL_GPIO_TogglePin(GPIOD, GPIO_PIN_13);
+      osDelay(990);
+      continue;
+    }
     if(strTime.inDay < 100){
       sprintf(TheTimeString,"%2dd %2dh %2dm %2ds", strTime.inDay, strTime.inHours, strTime.inMinutes, strTime.inSeconds);
     }else{

@@ -99,7 +99,8 @@ typedef enum{
   down = 1,
   view = 2,
   delete = 3,
-  live = 4
+  live = 4,
+  snap = 5
 } tenButtons;
 
 #define ENUM_VALUES 5
@@ -110,7 +111,7 @@ struct strButton{
   uint16_t width;
   uint16_t height;
   uint8_t pressed;
-  uint8_t name[7]; // Length set to 7 to help with padding 
+  uint8_t name[7]; // Length set to 7 to help with padding
 };
 
 extern int fninCheckPressed(tenButtons choice);
@@ -118,3 +119,13 @@ extern void fnvdResetTouch(void);
 
 extern uint8_t state;
 extern uint8_t stateChange;
+extern uint16_t inPhotoNumber;
+extern uint8_t inPhotoTaken;
+
+#define PHOTO_X_SIZE 160
+#define PHOTO_Y_SIZE 120
+
+extern uint8_t archPhotoBuffer[PHOTO_X_SIZE * PHOTO_Y_SIZE];
+
+extern void fnvdCameraToMem(void);
+

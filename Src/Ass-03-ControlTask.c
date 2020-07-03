@@ -30,9 +30,21 @@ void StartControlTask(void const * argument)
 
   while (1)
   {
+    if(inPhotoTaken > 0){
+      osDelay(10);
+      continue;
+    }
+    if(HAL_GPIO_ReadPin(GPIOA, B1_Pin) == SET){
+      osDelay(20);
+      if(HAL_GPIO_ReadPin(GPIOA, B1_Pin) == SET){
+        inPhotoTaken = 1;
+      }
+    }
     if(fninCheckPressed(live)){
       state ^= 1;
       stateChange = 1;
+      BSP_LCD_Clear(0xFFFFFFFF);
+      BSP_LCD_Clear(0xFFFFFFFF); // Double clear to help clear artifacts.
       osDelay(250);
     }
     // sprintf(state_message, "%d", state);
